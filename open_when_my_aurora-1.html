@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101626">
+<title>Open When… | My Aurora</title>
+<style>
+:root{--bg:#0d1423;--panel:#151f32;--gold:#e8bd83;--cream:#f6e9d4;--muted:#b8c0cf}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--cream);font-family:Georgia,'Times New Roman',serif;background:radial-gradient(ellipse at 15% 0%,#28344b 0,transparent 42%),radial-gradient(ellipse at 90% 70%,#2b2030 0,transparent 38%),var(--bg);overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.24;background-image:radial-gradient(1px 1px at 20% 30%,#fff 99%,transparent),radial-gradient(1px 1px at 80% 20%,#fff 99%,transparent),radial-gradient(1px 1px at 60% 70%,#fff 99%,transparent),radial-gradient(1px 1px at 35% 85%,#fff 99%,transparent);background-size:180px 180px}
+main{width:min(900px,92vw);margin:auto;padding:48px 0 36px;position:relative}
+header{text-align:center;margin:10px auto 32px}
+.kicker{font:11px/1.5 Arial,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+h1{font-size:clamp(36px,8vw,66px);font-weight:normal;letter-spacing:.02em;margin:14px 0 10px}
+.subtitle{font-size:17px;color:var(--muted);line-height:1.7;max-width:530px;margin:0 auto}
+.rule{width:70px;height:1px;background:var(--gold);margin:24px auto}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.envelope{background:linear-gradient(145deg,rgba(31,45,67,.92),rgba(17,26,42,.96));border:1px solid rgba(232,189,131,.24);border-radius:14px;min-height:154px;padding:18px 12px;color:var(--cream);cursor:pointer;text-align:center;transition:transform .2s,border-color .2s,background .2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.envelope:hover,.envelope:focus-visible{transform:translateY(-3px);border-color:var(--gold);outline:none;background:#202c42}
+.seal{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d9ac73,#91633e);color:#172033;font-size:20px;box-shadow:0 4px 18px #0005}
+.envelope span:last-child{font-size:16px;line-height:1.35}
+.hint{text-align:center;color:#9da8bb;font:12px/1.7 Arial,sans-serif;margin:24px 0 0}
+footer{text-align:center;color:#8e99ad;font-size:13px;margin-top:36px}
+footer span{color:var(--gold)}
+.modal{position:fixed;inset:0;background:rgba(4,8,16,.78);display:none;align-items:center;justify-content:center;padding:18px;z-index:5;backdrop-filter:blur(8px)}
+.modal.open{display:flex}
+.letter{position:relative;width:min(600px,100%);max-height:85vh;overflow:auto;background:linear-gradient(160deg,#f8ecd8,#ead7b8);color:#30271f;border-radius:8px;padding:clamp(25px,6vw,48px);box-shadow:0 25px 90px #0008;animation:appear .28s ease}
+@keyframes appear{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:none}}
+.close{position:absolute;right:12px;top:10px;border:0;background:transparent;font-size:27px;color:#6d5944;cursor:pointer}
+.letter small{font:10px Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#8a6a43}
+.letter h2{font-weight:normal;font-size:clamp(26px,6vw,38px);margin:18px 0}
+.letter p{font-size:17px;line-height:1.9;white-space:pre-line}
+.sign{margin-top:26px;color:#795a3b;font-style:italic}
+@media(max-width:620px){main{padding-top:30px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.envelope{min-height:142px;padding:14px 8px}.envelope span:last-child{font-size:15px}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}.envelope{min-height:115px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="kicker">A little place in the universe, just for you</div>
+  <h1>Open When…</h1>
+  <p class="subtitle">For my Aurora. Some words are meant for a particular moment. Open whichever letter your heart needs today.</p>
+  <div class="rule"></div>
+</header>
+<section class="grid" id="letters" aria-label="Sealed letters"></section>
+<p class="hint">Take your time. There is no right order. ♡</p>
+<footer>Made with love, for <span>Adriana</span> · <span>My Aurora</span></footer>
+</main>
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+  <article class="letter">
+    <button class="close" id="close" aria-label="Close letter">×</button>
+    <small>A letter for a moment like this</small>
+    <h2 id="letterTitle"></h2>
+    <p id="letterBody"></p>
+    <div class="sign" id="letterSign">Always, Ziad ♡</div>
+  </article>
+</div>
+<script>
+const letters = [
+ {title:"Open when you miss me", icon:"✦", body:"My Aurora,\\n\\nIf you opened this because you miss me, I wish I could make the distance disappear for a little while. I can't reach through this screen and hold your hand, but I can remind you that somewhere beneath the same sky, there is someone who thinks of you in the smallest moments of his day.\\n\\nUntil we can make memories in the same place, let this little letter be a reminder that what we share matters to me.\\n\\nTake a breath, my love. One day at a time.\\n\\nAlways, Ziad ♡"},
+ {title:"Open when you're sad", icon:"☾", body:"My love,\\n\\nYou don't have to turn a bad day into a good one just because someone asks how you are. You don't have to explain every feeling or pretend nothing hurts. Take your time. You deserve kindness even on the days when you don't feel like yourself.\\n\\nYou don't need to fix everything tonight. Start with one small thing: drink some water, get comfortable, and let yourself feel what you feel. I'm in your corner.\\n\\nI love you, exactly as a real person—with real feelings and difficult days. ♡"},
+ {title:"Open when you can't sleep", icon:"☽", body:"It's late, isn't it?\\n\\nMaybe your mind won't let you rest. I wish I could be there talking quietly with you until your eyes grew heavy. For now, let the world wait until morning. You don't have to solve your entire life tonight.\\n\\nImagine a quiet rainy evening, warm orange light by the window, and no pressure to say anything at all. You can just exist for a while.\\n\\nRest, my Aurora. Tomorrow can wait. ♡"},
+ {title:"Open when you feel insecure", icon:"✧", body:"I wish you could borrow my eyes for a little while—not because you're perfect, but because I notice beautiful things in you that you sometimes overlook. The way you smile, your kindness, your little habits, and the person you are when nobody is asking you to prove anything.\\n\\nYou don't have to look a certain way or be confident every day to deserve tenderness. You are more than the things you criticize about yourself.\\n\\nI hope you learn to be gentler with yourself. ♡"},
+ {title:"Open when you feel alone", icon:"♡", body:"You don't need to be surrounded by people to matter. And you don't need to hide the difficult parts of yourself to deserve care.\\n\\nI can't be physically beside you right now, and I won't pretend a letter can replace that. But I hope it reminds you that you are important to me, and that you can reach out to people you trust when things feel heavy. You don't have to carry everything alone.\\n\\nOne moment at a time, my love. ♡"},
+ {title:"Open when you need to smile", icon:"☼", body:"Emergency instructions:\\n\\n1. Remember that you're ridiculously adorable.\\n2. Recall one of our most ridiculous conversations.\\n3. Try not to smile at your phone like a fool.\\n4. If you do smile, I will consider my mission successful.\\n\\nI reserve the right to be equally embarrassing, so we're even. I hope something small makes you laugh today, my Aurora. ♡"},
+ {title:"Open when you're angry with me", icon:"✉", body:"If you're upset with me, I want to understand what hurt you instead of trying to win an argument. I won't always get everything right, and neither will you. What matters is whether we can be honest, listen, and take responsibility when we need to.\\n\\nYour feelings matter. Mine matter too. We can give each other room to cool down and then talk with respect. I want us to keep learning how to understand each other, not become opponents. ♡"},
+ {title:"Open when you doubt our future", icon:"∞", body:"I can't promise that everything about our future will be easy. I can tell you what I hope we build: something honest, patient, respectful, and real. Something that grows through effort, not just beautiful promises.\\n\\nWe have a lot of life ahead of us, and we'll both keep growing and changing. I hope we keep choosing what is good for each other, one step at a time.\\n\\nWhatever the future looks like, I'm grateful for the place you have in my life today. ♡"},
+ {title:"Open on your birthday", icon:"❋", body:"Happy birthday, my Aurora.\\n\\nToday is about the day you came into the world, but I keep thinking about all the ordinary days that came after it: the person you became, the things you learned, the hard moments you got through, and the tiny details that make you who you are.\\n\\nI wish I could be there to see your smile in person and make an ordinary moment feel special. Until then, I made this little world for you, so you have something you can return to whenever you want.\\n\\nI'm glad you exist. I'm glad our paths crossed. Happy birthday, Adriana. ♡\\n\\nAlways, Ziad"},
+ {title:"Open when we finally meet", icon:"☀", body:"Maybe one day we'll have a moment when neither of us knows what to say because we're finally standing in front of each other. If that day comes, I hope we let it be real and imperfect. No screen, no typing indicator, no countdown—just two people meeting as they are.\\n\\nI wonder what the first ordinary thing we'll do together will be. Maybe walk, talk too much, laugh at something silly, or simply enjoy not having to say goodbye through a phone.\\n\\nUntil then, this is a little wish for a day we hope to share. ♡"},
+ {title:"Open when you need to feel loved", icon:"❦", body:"I don't love you because you manage to be beautiful, happy, strong, or confident every day. You don't have to earn tenderness by being perfect.\\n\\nI love the little details: your smile, your kindness, your way of being yourself, and the things that make our conversations ours. I hope you feel free to be honest with me, even on the days when you're not at your best.\\n\\nYou deserve care that feels safe, patient, and respectful. Never forget that. ♡"},
+ {title:"Open when you find this again", icon:"✧", body:"If you've found this letter again, time has passed since the day I made it. I wonder what has changed, what we've learned, and which dreams are still waiting for us.\\n\\nMaybe life looks different now. Maybe we're laughing about things we couldn't have imagined back then. Whatever has changed, I hope this reminds you of the care I put into making something just for you.\\n\\nThank you for being part of this chapter of my life, my Aurora. ♡"}
+];
+const grid = document.getElementById('letters');
+const modal = document.getElementById('modal');
+const title = document.getElementById('letterTitle');
+const body = document.getElementById('letterBody');
+letters.forEach((letter, index) => {
+ const button = document.createElement('button');
+ button.className = 'envelope';
+ button.innerHTML = `<span class="seal" aria-hidden="true">${letter.icon}</span><span>${letter.title}</span>`;
+ button.addEventListener('click', () => {
+   title.textContent = letter.title;
+   body.textContent = letter.body.replace(/\\n/g, '\n');
+   modal.classList.add('open');
+   document.getElementById('close').focus();
+ });
+ grid.appendChild(button);
+});
+function closeModal(){modal.classList.remove('open')}
+document.getElementById('close').addEventListener('click', closeModal);
+modal.addEventListener('click', e => {if(e.target === modal) closeModal()});
+document.addEventListener('keydown', e => {if(e.key === 'Escape') closeModal()});
+</script>
+</body>
+</html>
